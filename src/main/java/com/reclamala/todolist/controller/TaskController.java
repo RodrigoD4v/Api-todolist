@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
@@ -29,4 +31,16 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Erro ao criar tarefa");
         }
     }
+    @GetMapping("/{userUid}")
+    public ResponseEntity<List<Task>> getTasks(@PathVariable String userUid) {
+        try {
+            // Buscar tarefas do usuário no Firestore
+            List<Task> tasks = firestoreService.getTasks(userUid);
+            return ResponseEntity.ok(tasks);
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar tarefas: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 }
+
