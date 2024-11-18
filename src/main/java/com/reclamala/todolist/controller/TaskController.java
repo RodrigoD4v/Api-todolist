@@ -31,6 +31,7 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Erro ao criar tarefa");
         }
     }
+    
     @GetMapping("/{userUid}")
     public ResponseEntity<List<Task>> getTasks(@PathVariable String userUid) {
         try {
@@ -40,6 +41,18 @@ public class TaskController {
         } catch (Exception e) {
             System.out.println("Erro ao buscar tarefas: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @DeleteMapping("/{userUid}/{taskId}")
+    public ResponseEntity<String> deleteTask(@PathVariable String userUid, @PathVariable String taskId) {
+        try {
+            // Excluir a tarefa do Firestore
+            String result = firestoreService.deleteTask(userUid, taskId);
+            return ResponseEntity.ok("Tarefa excluída com sucesso: " + result);
+        } catch (Exception e) {
+            System.out.println("Erro ao excluir a tarefa: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao excluir tarefa");
         }
     }
 }
