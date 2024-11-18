@@ -14,9 +14,13 @@ public class FirestoreService {
     @Autowired
     private Firestore firestore;
 
-    public String saveTask(Task task) throws Exception {
-        CollectionReference tasks = firestore.collection("tasks");
-        ApiFuture<WriteResult> writeResult = tasks.document(task.getId()).set(task);
+    public String saveTask(String userUid, Task task) throws Exception {
+        CollectionReference userTasks = firestore.collection("users")
+                                                  .document(userUid)
+                                                  .collection("user_tasks");
+        
+        ApiFuture<WriteResult> writeResult = userTasks.document(task.getId()).set(task);
+        
         return writeResult.get().getUpdateTime().toString();
     }
 }
