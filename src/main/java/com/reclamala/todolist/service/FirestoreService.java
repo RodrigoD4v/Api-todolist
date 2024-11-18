@@ -1,12 +1,14 @@
 package com.reclamala.todolist.service;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.reclamala.todolist.models.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class FirestoreService {
@@ -22,5 +24,21 @@ public class FirestoreService {
         ApiFuture<WriteResult> writeResult = userTasks.document(task.getId()).set(task);
         
         return writeResult.get().getUpdateTime().toString();
+    }
+
+    public List<Task> getTasks(String userUid) throws ExecutionException, InterruptedException {
+        CollectionReference userTasks = firestore.collection("users")
+                                                  .document(userUid)
+                                                  .collection("user_tasks");
+        
+        ApiFuture<QuerySnapshot> querySnapshot = userTasks.get();
+        List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+        
+        List<Task> tasks = new ArrayList<>();
+        for (QueryDocumentSnapshot document : documents) {
+            tasks.add(document.toObject(Task.class));
+        }
+        
+        return tasks;
     }
 }
