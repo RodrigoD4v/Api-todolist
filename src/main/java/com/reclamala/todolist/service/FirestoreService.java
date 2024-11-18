@@ -41,4 +41,13 @@ public class FirestoreService {
         
         return tasks;
     }
+
+    public String deleteTask(String userUid, String taskId) throws Exception {
+        CollectionReference userTasks = firestore.collection("users")
+                                                  .document(userUid)
+                                                  .collection("user_tasks");
+        
+        ApiFuture<WriteResult> writeResult = userTasks.document(taskId).delete();
+        return writeResult.get().getUpdateTime().toString();
+    }
 }
