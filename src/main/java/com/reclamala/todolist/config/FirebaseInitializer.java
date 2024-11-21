@@ -5,7 +5,6 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.cloud.firestore.Firestore;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,13 +16,10 @@ public class FirebaseInitializer {
 
     @Bean
     public Firestore firestore() throws IOException {
-
-        Dotenv dotenv = Dotenv.load();
-        
-        String serviceAccountPath = dotenv.get("FIREBASE_KEY");
+        String serviceAccountPath = System.getenv("FIREBASE_KEY");
 
         if (serviceAccountPath == null || serviceAccountPath.isEmpty()) {
-            throw new IllegalArgumentException("FIREBASE_KEY não está configurado no .env.");
+            throw new IllegalArgumentException("FIREBASE_KEY não está configurado nas variáveis de ambiente do Railway.");
         }
 
         FileInputStream serviceAccount = new FileInputStream(serviceAccountPath);
@@ -32,11 +28,13 @@ public class FirebaseInitializer {
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build();
 
+        // Inicialize o Firebase App se ainda não foi inicializado
         if (FirebaseApp.getApps().isEmpty()) {
             FirebaseApp.initializeApp(options);
             System.out.println("Firebase App initialized successfully.");
         }
 
+        // Inicialize o Firestore
         Firestore firestore = FirestoreClient.getFirestore();
         System.out.println("Firestore initialized successfully.");
         return firestore;
