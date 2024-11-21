@@ -35,3 +35,4 @@ build/
 ### ocultando serviceAccoutKey.json ###
 
 src/main/resources/serviceAccountKey.json
+.env
