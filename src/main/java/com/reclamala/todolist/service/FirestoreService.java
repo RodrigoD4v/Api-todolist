@@ -41,6 +41,23 @@ public class FirestoreService {
         
         return tasks;
     }
+    
+    public String updateTask(String userUid, String taskId, Task updatedTask) throws Exception {
+        CollectionReference userTasks = firestore.collection("users")
+                                                  .document(userUid)
+                                                  .collection("user_tasks");
+    
+        // Verificar se a tarefa existe
+        DocumentReference taskRef = userTasks.document(taskId);
+        ApiFuture<DocumentSnapshot> taskSnapshot = taskRef.get();
+        if (!taskSnapshot.get().exists()) {
+            throw new Exception("Tarefa não encontrada para o ID: " + taskId);
+        }
+    
+        // Atualizar tarefa
+        ApiFuture<WriteResult> writeResult = taskRef.set(updatedTask);
+        return writeResult.get().getUpdateTime().toString();
+    }
 
     public String deleteTask(String userUid, String taskId) throws Exception {
         CollectionReference userTasks = firestore.collection("users")
