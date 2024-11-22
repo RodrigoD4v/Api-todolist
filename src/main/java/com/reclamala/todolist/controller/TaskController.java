@@ -44,6 +44,19 @@ public class TaskController {
         }
     }
 
+    @PutMapping("/{userUid}/{taskId}")
+    public ResponseEntity<String> updateTask(@PathVariable String userUid, @PathVariable String taskId, @RequestBody Task updatedTask) {
+    try {
+        // Atualizar tarefa no Firestore
+        String result = firestoreService.updateTask(userUid, taskId, updatedTask);
+        return ResponseEntity.ok("Tarefa atualizada com sucesso: " + result);
+    } catch (Exception e) {
+        System.out.println("Erro ao atualizar tarefa: " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar tarefa");
+    }
+}
+
+
     @DeleteMapping("/{userUid}/{taskId}")
     public ResponseEntity<String> deleteTask(@PathVariable String userUid, @PathVariable String taskId) {
         try {
