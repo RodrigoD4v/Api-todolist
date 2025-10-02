@@ -3,6 +3,10 @@
 API de gerenciamento de tarefas (To-Do List) desenvolvida em Java com Spring Boot.
 Integra-se ao Firebase Firestore para persistência dos dados e é consumida por um aplicativo mobile.
 
+> ⚠️ **Importante:** Este projeto depende da variável de ambiente `FIREBASE_KEY` para inicializar o Firebase Firestore.  
+> Sem essa chave (que está privada), **o projeto não poderá ser executado localmente**.  
+> Quem quiser rodar o projeto precisa criar suas próprias credenciais do Firebase e configurá-las como variável de ambiente.
+
 ---
 
 ## 🧾 Visão Geral
@@ -50,7 +54,7 @@ Projetada para ser consumida por aplicativos mobile, mantendo o backend leve e f
 | PUT    | `/tasks/{id}` | Atualiza uma tarefa    |
 | DELETE | `/tasks/{id}` | Remove uma tarefa      |
 
-⚠️ Autenticação: gerenciada no frontend (Firebase Auth). A API assume que o usuário já está autenticado pelo app mobile.
+> ⚠️ Autenticação: gerenciada no frontend (Firebase Auth). A API assume que o usuário já está autenticado pelo app mobile.
 
 ## 🔧 Melhorias futuras
 
